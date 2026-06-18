@@ -1,30 +1,152 @@
 @import "tailwindcss";
 
+/* Komera — Warm Dawn over the Hills (light theme only) */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: light;
+
+  --background: #F7F3ED;
+  --foreground: #2C3E50;
+  --card: #FFFFFF;
+  --card-border: #E8DFD4;
+
+  --sunrise: #F5A962;
+  --sunrise-soft: #FDF0E4;
+  --hill: #3D7A5F;
+  --hill-dark: #2D5A47;
+  --lake: #4A9B9B;
+  --lake-soft: #E8F4F4;
+  --earth: #8B6F5E;
+  --bloom: #E8A0BF;
+  --bloom-soft: #FDF0F5;
+
+  --crisis: #C45C4A;
+  --crisis-soft: #FDF0EE;
+
+  --radius-lg: 2rem;
+  --shadow-soft: 0 4px 24px -4px rgba(61, 122, 95, 0.08);
+  --shadow-warm: 0 8px 32px -8px rgba(245, 169, 98, 0.2);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
+/* Keep Komera colors even when OS prefers dark mode */
 @media (prefers-color-scheme: dark) {
   :root {
-    --foreground: #ededed;
+    color-scheme: light;
+    --background: #F7F3ED;
+    --foreground: #2C3E50;
+    --card: #FFFFFF;
+    --hill: #3D7A5F;
+    --hill-dark: #2D5A47;
+    --lake: #4A9B9B;
+    --earth: #8B6F5E;
+    --sunrise: #F5A962;
+    --sunrise-soft: #FDF0E4;
   }
 }
 
-html,
-body {
-  background: #ffffff;
+@theme inline {
+  --color-background: #F7F3ED;
+  --color-foreground: #2C3E50;
+  --color-card: #FFFFFF;
+  --color-card-border: #E8DFD4;
+  --color-sunrise: #F5A962;
+  --color-sunrise-soft: #FDF0E4;
+  --color-hill: #3D7A5F;
+  --color-hill-dark: #2D5A47;
+  --color-lake: #4A9B9B;
+  --color-lake-soft: #E8F4F4;
+  --color-earth: #8B6F5E;
+  --color-bloom: #E8A0BF;
+  --color-bloom-soft: #FDF0F5;
+  --color-crisis: #C45C4A;
+  --color-crisis-soft: #FDF0EE;
+  --font-sans: var(--font-nunito);
+  --font-serif: var(--font-source-serif);
+}
+
+@source inline(
+  "from-hill to-lake from-sunrise to-bloom from-earth to-hill"
+  "from-lake to-hill from-hill-dark to-hill from-bloom to-sunrise"
+  "from-earth to-lake from-hill to-earth from-crisis to-earth"
+  "bg-red-100 ring-red-400 bg-orange-100 ring-orange-400"
+  "bg-yellow-100 ring-yellow-400 bg-lime-100 ring-lime-500"
+  "bg-green-100 ring-green-500"
+);
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: light;
 }
 
 body {
-  background: #ffffff !important;
+  background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-nunito), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1); opacity: 0.85; }
+  50% { transform: scale(1.06); opacity: 1; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes ripple {
+  0% { transform: scale(0.8); opacity: 0.6; }
+  100% { transform: scale(2); opacity: 0; }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes typing-dot {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-4px); opacity: 1; }
+}
+
+.animate-breathe { animation: breathe 4s ease-in-out infinite; }
+.animate-float { animation: float 3s ease-in-out infinite; }
+.animate-fade-up { animation: fade-up 0.5s ease-out forwards; }
+
+.komera-card {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+}
+
+.komera-gradient-hero {
+  background: linear-gradient(135deg, var(--hill-dark) 0%, var(--hill) 45%, var(--lake) 100%);
+  color: #ffffff;
+}
+
+.komera-gradient-warm {
+  background: linear-gradient(135deg, var(--sunrise-soft) 0%, var(--lake-soft) 100%);
+}
+
+.proverb-text {
+  font-family: var(--font-source-serif), Georgia, serif;
+  font-style: italic;
+}
+
+.typing-dot {
+  animation: typing-dot 1.2s ease-in-out infinite;
+}
+.typing-dot:nth-child(2) { animation-delay: 0.15s; }
+.typing-dot:nth-child(3) { animation-delay: 0.3s; }
+
+/* Readable labels on light surfaces only */
+.text-label-light {
+  color: var(--hill);
+}
+
+/* Readable labels on dark gradient hero surfaces */
+.text-label-hero {
+  color: #ffffff;
+  opacity: 0.92;
 }

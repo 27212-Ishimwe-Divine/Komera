@@ -1,20 +1,42 @@
 import type { Metadata } from 'next';
-import { Geist } from 'next/font/google';
+import { Nunito, Source_Serif_4 } from 'next/font/google';
 import { Toaster } from 'react-hot-toast';
-import BottomNav from './components/BottomNav';
+import AppProviders from '@/components/layout/AppProviders';
 import './globals.css';
 
-const geist = Geist({ subsets: ['latin'] });
+const nunito = Nunito({
+  subsets: ['latin'],
+  variable: '--font-nunito',
+  display: 'swap',
+});
 
-export const metadata: Metadata = { title: 'Komera', description: 'Your mental health companion' };
+const sourceSerif = Source_Serif_4({
+  subsets: ['latin'],
+  variable: '--font-source-serif',
+  display: 'swap',
+});
+
+export const metadata: Metadata = {
+  title: 'Komera — Your Inner Garden',
+  description: 'A warm mental health companion for Rwanda. Komera. Ndwira. Amahoro.',
+};
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className={`${geist.className} bg-white text-slate-900`}>
-        <Toaster position="top-right" />
-        <BottomNav />
-        <div className="pt-20">{children}</div>
+    <html lang="en" style={{ colorScheme: 'light' }}>
+      <body className={`${nunito.variable} ${sourceSerif.variable} font-sans antialiased`}>
+        <Toaster
+          position="top-center"
+          toastOptions={{
+            style: {
+              background: '#FFFFFF',
+              color: '#2C3E50',
+              borderRadius: '1rem',
+              border: '1px solid #E8DFD4',
+            },
+          }}
+        />
+        <AppProviders>{children}</AppProviders>
       </body>
     </html>
   );

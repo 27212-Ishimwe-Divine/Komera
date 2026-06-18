@@ -12,7 +12,7 @@ const QUESTIONS = {
     { id: 'joy', text: 'Did you experience something joyful?', type: 'scale' },
   ],
   rw: [
-    { id: 'sleep', text: 'N'ukeye ute last night?', type: 'scale' },
+    { id: 'sleep', text: "N'ukeye ute ijoro ryashize?", type: 'scale' },
     { id: 'appetite', text: 'Urumva ute amafunguro?', type: 'scale' },
     { id: 'social', text: 'Wumvise ute ko uri kumwe n\'abandi?', type: 'scale' },
     { id: 'anxiety', text: 'Hari ubwoba cyangwa impungenge?', type: 'scale' },

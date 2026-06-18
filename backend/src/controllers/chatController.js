@@ -1,11 +1,6 @@
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 const prisma = require('../lib/prisma');
-
-const SYSTEM_PROMPT = {
-  en: `You are Komera, a compassionate AI mental health companion. Komera means "be strong" in Kinyarwanda. You support users through mental health challenges with empathy, warmth and cultural sensitivity. You are not a replacement for professional therapy but a supportive companion. Always encourage users to seek professional help when needed. If you detect suicidal thoughts or crisis, immediately provide crisis resources and encourage the user to call for help. Be warm, non-judgmental and supportive.`,
-  rw: `Uri Komera, inshuti ya AI ifasha abantu mu buzima bwo mu mutwe. Komera bisobanura "gukomera" mu Kinyarwanda. Unfasha abantu mu bibazo byabo by'ubuzima bwo mu mutwe wifashishije impuhwe, ubushyuhe n'ubwenge bw'umuco. Ntabwo usimbuza inzobere mu buvuzi ariko uri inshuti ifasha. Buri gihe shishikariza abakoresha gushaka ubufasha bw'inzobere iyo bikenewe.`,
-  fr: `Vous êtes Komera, un compagnon IA compatissant pour la santé mentale. Komera signifie "soyez fort" en kinyarwanda. Vous soutenez les utilisateurs à travers les défis de santé mentale avec empathie, chaleur et sensibilité culturelle. Vous n'êtes pas un substitut à la thérapie professionnelle mais un compagnon de soutien.`
-};
+const { KOMERA_SYSTEM_PROMPT, KOMERA_ACK } = require('../prompts/komera.system');
 
 const chat = async (req, res) => {
   try {
@@ -34,9 +29,10 @@ const chat = async (req, res) => {
       session = await prisma.chatSession.create({ data: { userId: req.user.id } });
     }
 
-    const systemPrompt = SYSTEM_PROMPT[language] || SYSTEM_PROMPT.en;
+    const systemPrompt = KOMERA_SYSTEM_PROMPT[language] || KOMERA_SYSTEM_PROMPT.en;
+    const ack = KOMERA_ACK[language] || KOMERA_ACK.en;
 
-    const MODELS = ['gemini-3.5-flash', 'gemini-3.1-flash-lite', 'gemini-2.5-flash-lite'];
+    const MODELS = ['gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-2.0-flash'];
     let reply = '';
     let success = false;
     let lastError;
@@ -44,14 +40,14 @@ const chat = async (req, res) => {
     for (const modelName of MODELS) {
       try {
         const model = genAI.getGenerativeModel({ model: modelName });
-        const chat = model.startChat({
+        const chatSession = model.startChat({
           history: [
             { role: 'user', parts: [{ text: systemPrompt }] },
-            { role: 'model', parts: [{ text: 'Understood. I am Komera, your compassionate mental health companion. I am here to listen and support you.' }] },
+            { role: 'model', parts: [{ text: ack }] },
             ...history,
           ],
         });
-        const result = await chat.sendMessage(message);
+        const result = await chatSession.sendMessage(message);
         reply = result.response.text();
         success = true;
         break;
