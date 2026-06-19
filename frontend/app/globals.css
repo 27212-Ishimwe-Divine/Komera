@@ -150,3 +150,10 @@ body {
   color: #ffffff;
   opacity: 0.92;
 }
+.max-w-xl {
+  max-width: 38rem !important;
+}
+
+.rounded-3xl {
+  border-radius: 2rem;
+}
