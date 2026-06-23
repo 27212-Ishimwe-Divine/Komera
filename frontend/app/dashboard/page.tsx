@@ -1,4 +1,3 @@
-﻿
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -24,8 +23,10 @@ export default function DashboardPage() {
   const dailySteps = DAILY_STEPS[lang];
 
   useEffect(() => {
-    api.get('/mood').then(({ data }) => setLogs(data)).catch(() => {});
-  }, []);
+    if (user) {
+      api.get('/mood').then(({ data }) => setLogs(data)).catch(() => {});
+    }
+  }, [user]);
 
   if (!user) return null;
 
@@ -34,18 +35,18 @@ export default function DashboardPage() {
     { href: '/mood', emoji: '🌸', title: T.mood, desc: T.moodDesc, accent: 'from-sunrise to-bloom' },
     { href: '/journal', emoji: '📓', title: T.journal, desc: T.journalDesc, accent: 'from-earth to-hill' },
     { 
-      href: '/breathe', 
-      emoji: '🌬️', 
-      title: T.breatheTitle, 
-      desc: T.breatheDesc, 
-      accent: 'from-lake to-hill' 
+      href: '/garden', 
+      emoji: '🌳', 
+      title: T.yourGarden || "Your Garden", 
+      desc: T.gardenDesc || "Watch your inner world grow", 
+      accent: 'from-emerald-600 to-amber-500' 
     },
     { 
-      href: '/ground', 
-      emoji: '🌍', 
-      title: T.groundTitle, 
-      desc: T.groundDesc, 
-      accent: 'from-hill-dark to-hill' 
+      href: '/breathe', 
+      emoji: '🌬️', 
+      title: T.breatheTitle || "Breathe", 
+      desc: T.breatheDesc || "Find calm in every breath", 
+      accent: 'from-lake to-hill' 
     },
   ];
 
@@ -55,8 +56,8 @@ export default function DashboardPage() {
   );
 
   return (
-    <div className="min-h-screen bg-background">
-      <main className="mx-auto max-w-3xl px-6 py-10 space-y-8">   {/* Bigger width + padding */}
+    <div className="min-h-screen bg-background pb-12">
+      <main className="mx-auto max-w-4xl px-6 py-10 space-y-10">
 
         {/* Greeting */}
         <section className="animate-fade-up">
@@ -65,81 +66,96 @@ export default function DashboardPage() {
           </p>
           <div className="mt-3 flex items-start justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-bold text-hill-dark">{T.dashboardGreeting ? T.dashboardGreeting(user.name) : user.name}</h1>
-              <p className="mt-3 text-base leading-relaxed text-earth">{T.dashboardExplain}</p>
+              <h1 className="text-4xl font-bold text-hill-dark leading-tight">
+                {T.dashboardGreeting ? T.dashboardGreeting(user.name) : `Welcome, ${user.name}`}
+              </h1>
+              <p className="mt-3 text-base leading-relaxed text-earth">
+                {T.dashboardExplain || "How are you feeling today?"}
+              </p>
             </div>
-            <button
-              onClick={logout}
-              className="flex-shrink-0 rounded-full border border-[#E8DFD4] bg-card px-4 py-2 text-sm font-semibold text-earth transition hover:border-hill hover:text-hill"
-            >
-              {T.logout}
-            </button>
+            <div className="flex items-center gap-3">
+              <a
+                href="tel:112"
+                className="rounded-full border-2 border-red-500 bg-red-50 px-4 py-2 text-sm font-semibold text-red-600 hover:bg-red-100 transition"
+              >
+                📞 {T.policeEmergency}: {T.policeNumber}
+              </a>
+              <button
+                onClick={logout}
+                className="rounded-full border border-[#E8DFD4] bg-card px-5 py-2 text-sm font-medium text-earth hover:border-hill hover:text-hill transition"
+              >
+                {T.logout}
+              </button>
+            </div>
           </div>
         </section>
 
-        {/* Daily proverb */}
-        <section className="komera-card p-7 animate-fade-up">   {/* Bigger padding */}
-          <p className="text-xs font-semibold uppercase tracking-wider text-hill">
-            {T.dailyProverb || "Today's proverb"}
+        {/* Daily Proverb */}
+        <section className="komera-card p-8 rounded-3xl animate-fade-up">
+          <p className="text-xs font-semibold uppercase tracking-widest text-hill">
+            {T.dailyProverb || "Today's Wisdom"}
           </p>
-          <p className="proverb-text mt-3 text-lg text-hill-dark">{proverb.text}</p>
+          <p className="proverb-text mt-4 text-xl leading-relaxed text-hill-dark">
+            {proverb.text}
+          </p>
           <p className="mt-3 text-sm text-earth">{proverb.meaning}</p>
         </section>
 
-        {/* Garden + daily steps */}
-        <div className="grid gap-6 sm:grid-cols-2">   {/* More gap */}
-          <div className="scale-[1.02]">   {/* Slightly bigger garden */}
-            <MoodGarden lang={lang} logs={logs} />
+        {/* Garden + Daily Steps */}
+        <div className="grid gap-6 lg:grid-cols-5">
+          <div className="lg:col-span-3">
+            <MoodGarden lang={lang} logs={logs} compact={false} />
           </div>
-          <div className="komera-card p-7">   {/* Bigger padding */}
+
+          <div className="lg:col-span-2 komera-card p-7 rounded-3xl">
             <p className="text-xs font-semibold uppercase tracking-wider text-hill">
-              {T.today || 'Today'}
+              {T.today || "Today's Calm Steps"}
             </p>
-            <h3 className="mt-3 font-bold text-hill-dark text-xl">
-              {T.oneCalmStep || 'One calm step'}
-            </h3>
-            <div className="mt-5 space-y-3">
-              {dailySteps.map((step: any) => (
+            <div className="mt-6 space-y-3">
+              {dailySteps.map((step: any, i: number) => (
                 <Link
-                  key={step.href}
+                  key={i}
                   href={step.href}
-                  className="flex items-center gap-4 rounded-2xl bg-background p-4 transition hover:bg-lake-soft"
+                  className="flex items-center gap-4 rounded-2xl bg-background p-4 transition hover:bg-lake-soft group"
                 >
-                  <span className="text-2xl">{step.emoji}</span>
-                  <span className="text-base font-medium text-hill-dark">{step.title}</span>
+                  <span className="text-3xl transition group-hover:scale-110">{step.emoji}</span>
+                  <div>
+                    <p className="font-semibold text-hill-dark">{step.title}</p>
+                    <p className="text-xs text-earth mt-0.5">{step.desc || ''}</p>
+                  </div>
                 </Link>
               ))}
             </div>
           </div>
         </div>
 
-        {/* Services grid */}
+        {/* Quick Tools */}
         <section>
-          <div className="mb-5">
+          <div className="mb-6 flex items-center justify-between">
             <p className="text-sm font-semibold uppercase tracking-wider text-hill">
-              {T.services || 'Services'}
+              {T.services || 'Explore Tools'}
             </p>
             <input
               type="search"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder={T.searchPlaceholder || 'Search...'}
-              className="mt-4 w-full rounded-full border border-[#E8DFD4] bg-card px-5 py-3 text-base outline-none transition focus:border-lake focus:ring-2 focus:ring-lake-soft"
+              placeholder={T.searchPlaceholder || 'Search tools...'}
+              className="w-80 rounded-full border border-[#E8DFD4] bg-card px-5 py-3 text-sm focus:border-lake focus:ring-2 focus:ring-lake-soft outline-none"
             />
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
-            {filtered.map((card) => (
+            {filtered.map((card, i) => (
               <Link
-                key={card.href}
+                key={i}
                 href={card.href}
-                className="komera-card group overflow-hidden p-6 transition hover:-translate-y-0.5 hover:shadow-[var(--shadow-warm)]"
+                className="komera-card group p-7 rounded-3xl transition hover:-translate-y-1 hover:shadow-xl"
               >
-                <div className={`inline-flex h-14 w-14 items-center justify-center rounded-3xl bg-gradient-to-br ${card.accent} text-2xl text-white shadow-sm`}>
+                <div className={`inline-flex h-16 w-16 items-center justify-center rounded-3xl bg-gradient-to-br ${card.accent} text-4xl text-white shadow-inner`}>
                   {card.emoji}
                 </div>
-                <h3 className="mt-5 font-semibold text-xl text-hill-dark">{card.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-earth">{card.desc}</p>
+                <h3 className="mt-6 text-2xl font-semibold text-hill-dark">{card.title}</h3>
+                <p className="mt-3 text-base leading-relaxed text-earth">{card.desc}</p>
               </Link>
             ))}
           </div>

@@ -65,15 +65,33 @@ export default function MoodPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <main className="mx-auto max-w-xl px-4 py-6">
-        <div className="mb-6 text-center">
-          <p className="text-xs font-semibold uppercase tracking-wider text-hill">Mood Garden</p>
-          <h1 className="mt-2 text-2xl font-bold text-hill-dark">{T.moodTitle}</h1>
-          <p className="mt-2 text-sm text-earth">{T.moodIntro}</p>
+    <div className="relative min-h-screen">
+      {/* Calming background */}
+      <div
+        className="fixed inset-0 -z-10 bg-cover bg-center bg-fixed"
+        style={{
+          backgroundImage:
+            "url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=1600&auto=format&fit=crop')",
+        }}
+      />
+      <div className="fixed inset-0 -z-10 bg-gradient-to-b from-[#fdf8ef]/92 via-[#fdf8ef]/88 to-[#fdf8ef]/95" />
+
+      <main className="relative mx-auto max-w-xl px-4 py-6">
+        <div className="mb-6 flex items-center justify-between">
+          <div className="text-center flex-1">
+            <p className="text-xs font-semibold uppercase tracking-wider text-hill">Mood Garden</p>
+            <h1 className="mt-2 text-2xl font-bold text-hill-dark">{T.moodTitle}</h1>
+            <p className="mt-2 text-sm text-earth">{T.moodIntro}</p>
+          </div>
+          <a
+            href="tel:112"
+            className="rounded-full border-2 border-red-500 bg-red-50 px-4 py-2 text-sm font-semibold text-red-600 hover:bg-red-100 transition"
+          >
+            📞 {T.policeEmergency}: {T.policeNumber}
+          </a>
         </div>
 
-        <div className="komera-card p-6">
+        <div className="komera-card bg-card/90 backdrop-blur p-6">
           <h2 className="text-center text-lg font-semibold text-hill-dark">{T.moodQuestion}</h2>
           <form onSubmit={submit}>
             <RadialMoodSelector moods={moodsForSelector} selected={selected} onSelect={setSelected} />
@@ -88,7 +106,7 @@ export default function MoodPage() {
                 <textarea
                   value={details}
                   onChange={(e) => setDetails(e.target.value)}
-                  className="w-full resize-none rounded-2xl border border-[#E8DFD4] bg-background px-4 py-3 text-sm text-foreground outline-none transition focus:border-lake focus:ring-2 focus:ring-lake-soft"
+                  className="w-full resize-none rounded-2xl border border-[#E8DFD4] bg-background/90 px-4 py-3 text-sm text-foreground outline-none transition focus:border-lake focus:ring-2 focus:ring-lake-soft"
                   rows={4}
                   placeholder={T.moodPromptPlaceholder}
                 />
@@ -114,7 +132,7 @@ export default function MoodPage() {
             return (
               <div
                 key={log.id}
-                className="komera-card flex items-center gap-4 px-4 py-4"
+                className="komera-card bg-card/90 backdrop-blur flex items-center gap-4 px-4 py-4"
               >
                 <span className="text-3xl">{plantEmoji}</span>
                 <div className="flex-1">

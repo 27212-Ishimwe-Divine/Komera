@@ -11,18 +11,21 @@ const NAV: Record<Lang, { href: string; icon: string; label: string }[]> = {
     { href: '/chat', icon: '💬', label: 'Chat' },
     { href: '/mood', icon: '🌸', label: 'Mood' },
     { href: '/journal', icon: '📓', label: 'Journal' },
+    { href: '/resources', icon: '📚', label: 'Resources' },
   ],
   rw: [
     { href: '/dashboard', icon: '🌱', label: 'Urusobe' },
     { href: '/chat', icon: '💬', label: 'Ikiganiro' },
     { href: '/mood', icon: '🌸', label: 'Imitekerere' },
     { href: '/journal', icon: '📓', label: 'Inyandiko' },
+    { href: '/resources', icon: '📚', label: 'Amakuru' },
   ],
   fr: [
     { href: '/dashboard', icon: '🌱', label: 'Jardin' },
     { href: '/chat', icon: '💬', label: 'Chat' },
     { href: '/mood', icon: '🌸', label: 'Humeur' },
     { href: '/journal', icon: '📓', label: 'Journal' },
+    { href: '/resources', icon: '📚', label: 'Ressources' },
   ],
 };
 

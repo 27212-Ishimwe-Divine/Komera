@@ -33,7 +33,7 @@ export default function JournalPage() {
     setLoading(true);
     try {
       await api.post('/journal', { title, content });
-      toast.success('✅ Entry saved!');
+      toast.success('Entry saved!');
       setTitle(''); setContent(''); fetchEntries();
     } catch { toast.error('Failed to save entry'); }
     finally { setLoading(false); }
@@ -47,43 +47,61 @@ export default function JournalPage() {
   const T = t[lang];
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <nav className="bg-gradient-to-r from-teal-800 to-emerald-800 px-6 py-4 flex justify-between items-center shadow-lg">
-        <Link href="/dashboard" className="text-white font-bold text-lg hover:text-teal-200 transition">{T.back}</Link>
-        <span className="text-teal-200 text-sm font-medium">{T.journalTitle}</span>
+    <div className="relative min-h-screen">
+      {/* Calming background */}
+      <div
+        className="fixed inset-0 -z-10 bg-cover bg-center bg-fixed"
+        style={{
+          backgroundImage:
+            "url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=1600&auto=format&fit=crop')",
+        }}
+      />
+      <div className="fixed inset-0 -z-10 bg-gradient-to-b from-[#fdf8ef]/92 via-[#fdf8ef]/88 to-[#fdf8ef]/95" />
+
+      <nav className="relative bg-card/90 backdrop-blur px-6 py-4 flex justify-between items-center border-b border-[#E8DFD4]">
+        <Link href="/dashboard" className="text-hill-dark font-bold text-lg hover:text-hill transition">{T.back}</Link>
+        <div className="flex items-center gap-3">
+          <span className="text-hill text-sm font-medium">{T.journalTitle}</span>
+          <a
+            href="tel:112"
+            className="rounded-full border-2 border-red-500 bg-red-50 px-4 py-2 text-sm font-semibold text-red-600 hover:bg-red-100 transition"
+          >
+            📞 {T.policeEmergency}: {T.policeNumber}
+          </a>
+        </div>
       </nav>
 
-      <main className="max-w-2xl mx-auto px-6 py-10">
-        <div className="bg-white rounded-2xl shadow-md p-6 mb-8 border border-gray-100">
-          <h2 className="text-xl font-bold text-gray-800 mb-4">{T.newEntry}</h2>
-          <p className="text-sm text-gray-600 mb-4">This is your private space to write freely. There is no right or wrong way to express yourself.</p>
+      <main className="relative max-w-2xl mx-auto px-6 py-10">
+        <div className="komera-card bg-card/90 backdrop-blur p-6 mb-8">
+          <h2 className="text-xl font-bold text-hill-dark mb-4">{T.newEntry}</h2>
+          <p className="text-sm text-earth mb-4">This is your private space to write freely. There is no right or wrong way to express yourself.</p>
           <form onSubmit={submit} className="space-y-4">
             <input type="text" placeholder={T.entryTitle} value={title} onChange={e => setTitle(e.target.value)}
-              className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-gray-700 focus:outline-none focus:border-teal-500 transition" />
+              className="w-full border border-[#E8DFD4] bg-background/90 rounded-xl px-4 py-3 text-foreground focus:outline-none focus:border-hill focus:ring-2 focus:ring-lake-soft transition" />
             <textarea placeholder={T.entryContent} value={content} onChange={e => setContent(e.target.value)}
               rows={6} required
-              className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-gray-700 focus:outline-none focus:border-teal-500 transition resize-none" />
+              className="w-full border border-[#E8DFD4] bg-background/90 rounded-xl px-4 py-3 text-foreground focus:outline-none focus:border-hill focus:ring-2 focus:ring-lake-soft transition resize-none" />
             <button type="submit" disabled={loading}
-              className="w-full bg-teal-600 hover:bg-teal-700 text-white py-3 rounded-xl font-bold transition disabled:opacity-50 shadow-lg shadow-teal-100">
+              className="w-full bg-hill hover:bg-hill-dark text-white py-3 rounded-xl font-bold transition disabled:opacity-50 shadow-sm">
               {loading ? T.saving : T.saveEntry}
             </button>
           </form>
         </div>
 
-        <h3 className="font-bold text-gray-700 mb-4 text-lg">{T.pastEntries}</h3>
+        <h3 className="font-bold text-hill-dark mb-4 text-lg">{T.pastEntries}</h3>
         <div className="space-y-4">
           {entries.map(entry => (
-            <div key={entry.id} className="bg-white rounded-xl shadow-sm p-5 border border-gray-100">
+            <div key={entry.id} className="komera-card bg-card/90 backdrop-blur p-5">
               <div className="flex justify-between items-start mb-2">
-                <h4 className="font-bold text-gray-800">{entry.title || T.untitled}</h4>
+                <h4 className="font-bold text-hill-dark">{entry.title || T.untitled}</h4>
                 <button onClick={() => deleteEntry(entry.id)}
                   className="text-red-400 hover:text-red-600 text-xs font-medium transition">{T.delete}</button>
               </div>
-              <p className="text-gray-500 text-sm leading-relaxed line-clamp-3">{entry.content}</p>
-              <p className="text-xs text-gray-300 mt-3">{new Date(entry.createdAt).toLocaleDateString()}</p>
+              <p className="text-earth text-sm leading-relaxed line-clamp-3">{entry.content}</p>
+              <p className="text-xs text-earth/60 mt-3">{new Date(entry.createdAt).toLocaleDateString()}</p>
             </div>
           ))}
-          {entries.length === 0 && <p className="text-gray-400 text-sm text-center py-8">{T.noEntries}</p>}
+          {entries.length === 0 && <p className="text-earth/70 text-sm text-center py-8">{T.noEntries}</p>}
         </div>
       </main>
     </div>
